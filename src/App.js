@@ -1,10 +1,24 @@
-import { useState } from 'react';
-import Cart from './components/Cart';
-import ProduceList from './components/ProduceList';
+import { useEffect, useState } from "react";
+import Cart from "./components/Cart";
+import ProduceList from "./components/ProduceList";
+import { useDispatch, useSelector } from "react-redux";
+import { populateProduce } from "./store/produce";
 
 function App() {
   const [showCart, setShowCart] = useState(false);
-  
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.items);
+
+  useEffect(() => {
+    dispatch(populateProduce());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      setShowCart(true);
+    }
+  }, [cartItems]);
+
   return (
     <>
       <nav>
@@ -14,12 +28,12 @@ function App() {
           Checkout
         </button>
       </nav>
-      <main style={showCart ? { marginRight: '300px' } : {}} >
+      <main style={showCart ? { marginRight: "300px" } : {}}>
         <ProduceList />
       </main>
       <div
         className="sidebar"
-        style={showCart ? { transform: 'translateX(-100%)' } : {}}
+        style={showCart ? { transform: "translateX(-100%)" } : {}}
       >
         <div className="sidebar-header">
           <button className="arrow-button" onClick={() => setShowCart(false)}>
